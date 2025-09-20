@@ -1,0 +1,31 @@
+# Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Database files
+appointments.db
+
+# Model files
+model/
+**/model/
+*.pkl
+**/*.pkl
+
+# Dataset files (optional, if you want to ignore datasets)
+dataset/
+
+# Environment files
+.env
+*.env
+
+# OS files
+.DS_Store
+
+# VSCode settings
+.vscode/
+
+# Python virtual environment
+venv/
+ENV/
+env/
