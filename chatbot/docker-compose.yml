@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  # Backend API Service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: customer-support-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/appointments.db:/app/appointments.db
+      - backend_data:/app/data
+    environment:
+      - PYTHONPATH=/app
+      - DATABASE_URL=sqlite:///./appointments.db
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    restart: unless-stopped
+    networks:
+      - blys-network
+
+  # Frontend Service
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: customer-support-frontend
+    ports:
+      - "8501:8501"
+    environment:
+      - API_BASE_URL=http://backend:8000/api/v1
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    restart: unless-stopped
+    networks:
+      - blys-network
+
+  # API Testing Service (Optional)
+  api-tester:
+    build:
+      context: .
+      dockerfile: Dockerfile.api-tester
+    container_name: blys-api-tester
+    depends_on:
+      backend:
+        condition: service_healthy
+    environment:
+      - BASE_URL=http://backend:8000
+    networks:
+      - blys-network
+    profiles:
+      - testing
+
+volumes:
+  backend_data:
+    driver: local
+
+networks:
+  blys-network:
+    driver: bridge
