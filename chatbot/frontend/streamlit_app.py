@@ -92,7 +92,7 @@ def send_message(message: str):
 
 # Sidebar
 with st.sidebar:
-    st.title("💆‍♀️ Blys AI Chatbot")
+    st.title("💆‍♀️ Customer Support AI Chatbot")
     st.markdown("### Massage Booking Assistant")
 
     # Backend status check (cached to avoid excessive requests)
@@ -170,7 +170,7 @@ with st.sidebar:
             st.session_state.show_all_massages = False
 
 # Main chat interface
-st.title("💬 Chat with Blys AI Assistant")
+st.title("💬 Chat with Customer Support AI Assistant")
 
 # Display chat history
 for message in st.session_state.messages:
