@@ -1,36 +1,76 @@
-# Customer Support AI Chatbot
+# Task 3: Customer Support Chatbot
 
-A full-stack AI-powered customer support chatbot for massage booking, built with FastAPI (backend) and Streamlit (frontend).  
-Easily deployable with Docker Compose for local development or production.
+## Overview
+
+This project implements a **Customer Support Chatbot** system with a modular backend (FastAPI) and a frontend (Streamlit). The chatbot can answer customer queries, schedule appointments, and interact with a simple dataset and ML model. The project is containerized for easy deployment and includes tools for data handling and inference.
 
 ---
 
 ## Features
 
-- **Conversational AI** for customer support and massage booking
-- **FastAPI backend** with RESTful endpoints and OpenAPI docs
-- **Streamlit frontend** for interactive chat and appointment management
-- **Persistent user sessions** and conversation state
-- **Service listing** and appointment viewing
-- **Dockerized** for easy deployment
+- **Conversational AI:** Responds to customer queries using a trained ML model.
+- **Appointment Scheduling:** Allows users to book appointments via chat.
+- **Data Tools:** Utilities for data ingestion and management.
+- **Modular Backend:** FastAPI-based backend with clear separation of API, services, models, and tools.
+- **Frontend:** Streamlit app for user interaction.
+- **Dockerized:** Ready-to-use Docker and Docker Compose setup for both development and production.
+- **Notebooks:** Jupyter notebooks for data analysis and model training.
+
+---
+
+## Screenshots
+
+| Book Massage | Cancel Appointment |
+|--------------|-------------------|
+| ![Book Massage](screenshots/Book%20Massage.png) | ![Cancel Appointment](screenshots/Cancel%20Appointment.png) |
+
+| See Appointment | View Service |
+|-----------------|--------------|
+| ![See Appointment](screenshots/See%20Appointment.png) | ![View Service](screenshots/View%20Service.png) |
 
 ---
 
 ## Project Structure
 
 ```
-chatbot/
-├── backend/         # FastAPI backend
-│   ├── app/         # Application code
-│   ├── Dockerfile
-│   └── requirements.txt
-├── frontend/        # Streamlit frontend
-│   ├── Dockerfile
-│   └── streamlit_app.py
-├── docker-compose.yml
-├── start.sh         # Startup script (Mac/Linux)
-├── start.bat        # Startup script (Windows)
-└── notebooks/       # Data science & model training
+Task3/
+├── chatbot/
+│   ├── backend/
+│   │   ├── app/
+│   │   │   ├── api/                # FastAPI routers
+│   │   │   ├── core/               # Configurations
+│   │   │   ├── dataset/            # Data files
+│   │   │   ├── model/              # Trained ML model
+│   │   │   ├── models/             # Pydantic schemas
+│   │   │   ├── services/           # Business logic
+│   │   │   ├── tools/              # Data and inference tools
+│   │   │   ├── main.py             # FastAPI entrypoint
+│   │   │   └── __init__.py
+│   │   ├── Dockerfile
+│   │   ├── requirements.txt
+│   │   └── appointments.db         # SQLite DB for appointments
+│   ├── frontend/
+│   │   ├── streamlit_app.py        # Streamlit UI
+│   │   ├── Dockerfile
+│   │   └── requirements.txt
+│   ├── docker-compose.yml
+│   ├── docker-compose.prod.yml
+│   ├── run-backend.sh
+│   ├── run-frontend.sh
+│   ├── start.sh
+│   └── start.bat
+├── notebooks/
+│   ├── data_ingestion.ipynb
+│   ├── intent_analysis.ipynb
+│   ├── simple_dataset.csv
+│   ├── training_data.json
+│   └── model/
+├── screenshots/
+│   ├── Book Massage.png
+│   ├── Cancel Appointment.png
+│   ├── See Appointment.png
+│   └── View Service.png
+└── README.md
 ```
 
 ---
@@ -39,43 +79,101 @@ chatbot/
 
 ### Prerequisites
 
-- [Docker](https://www.docker.com/products/docker-desktop)
+- [Docker](https://www.docker.com/)
 - [Docker Compose](https://docs.docker.com/compose/)
-
-### Quick Start
-
-1. **Clone the repository:**
-   ```sh
-   git clone <your-repo-url>
-   cd Task3/chatbot
-   ```
-
-2. **Start the system (Mac/Linux):**
-   ```sh
-   ./start.sh
-   ```
-   Or on Windows:
-   ```sh
-   start.bat
-   ```
-
-   Alternatively, use Docker Compose directly:
-   ```sh
-   docker-compose up --build -d
-   ```
-
-3. **Access the application:**
-   - **Frontend (Streamlit):** [http://localhost:8501](http://localhost:8501)
-   - **Backend API:** [http://localhost:8000](http://localhost:8000)
-   - **API Docs:** [http://localhost:8000/docs](http://localhost:8000/docs)
+- Python 3.11+ (for local development)
 
 ---
 
-## Development
+### 1. Clone the Repository
 
-- **Backend:** FastAPI app in `backend/app/`
-- **Frontend:** Streamlit app in `frontend/`
-- **Notebooks:** Data science and model training in `notebooks/`
+```bash
+git clone <repo-url>
+cd "Kyra Works/Task3/chatbot"
+```
+
+---
+
+### 2. Build and Run with Docker Compose
+
+#### Development
+
+```bash
+docker-compose up --build
+```
+
+#### Production
+
+```bash
+docker-compose -f docker-compose.prod.yml up --build
+```
+
+---
+
+### 3. Run Backend and Frontend Locally (Without Docker)
+
+#### Backend
+
+```bash
+cd backend
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+```
+
+#### Frontend
+
+```bash
+cd ../frontend
+pip install -r requirements.txt
+streamlit run streamlit_app.py
+```
+
+---
+
+## API Endpoints
+
+- **GET /**  
+  Health check for backend.
+
+- **POST /api/v1/chat**  
+  Send a message to the chatbot.
+
+- **POST /api/v1/appointments**  
+  Book an appointment.
+
+- **GET /api/v1/appointments**  
+  List all appointments.
+
+---
+
+## Customization
+
+- **Dataset:**  
+  Update `backend/app/dataset/simple_dataset.csv` for new intents or responses.
+
+- **Model:**  
+  Retrain and replace `backend/app/model/chatbot_model.pkl` as needed.
+
+- **Configuration:**  
+  Edit `backend/app/core/config.py` for environment variables and settings.
+
+---
+
+## Development Notes
+
+- **Backend:**  
+  Modular FastAPI app with routers, services, and tools for easy extension.
+
+- **Frontend:**  
+  Streamlit app connects to backend API for chat and appointment features.
+
+- **Database:**  
+  Uses SQLite (`appointments.db`) for appointment storage.
+
+- **Testing:**  
+  Add tests in `backend/app/tests/` (not included by default).
+
+---
 
 ## Notebooks
 
@@ -85,40 +183,24 @@ chatbot/
 - **Intent Analysis:**  
   `notebooks/intent_analysis.ipynb` for exploring and training intent models.
 
-### Useful Commands
-
-- **Stop all services:**
-  ```sh
-  docker-compose down
-  ```
-- **View logs:**
-  ```sh
-  docker-compose logs
-  ```
-
 ---
 
-## Customization
+## Scripts
 
-- **API base URL:**  
-  Set the `API_BASE_URL` environment variable in the frontend if deploying backend separately.
+- `run-backend.sh` / `run-frontend.sh`:  
+  Helper scripts to start backend/frontend.
 
-- **Add new services:**  
-  Update `backend/app/dataset/simple_dataset.csv`.
-
-- **Model retraining:**  
-  Use the notebooks in `notebooks/` and update the model in `backend/app/model/`.
+- `start.sh` / `start.bat`:  
+  Cross-platform startup scripts.
 
 ---
 
 ## License
 
-MIT License. See [LICENSE](LICENSE) for details.
+MIT License (add your license here)
 
 ---
 
 ## Acknowledgements
 
-- [Streamlit](https://streamlit.io/)
-- [FastAPI](https://fastapi.tiangolo.com/)
-- [Docker](https://www.docker.com/)
+- Built with [FastAPI](https://fastapi.tiangolo.com/), [Streamlit](https://streamlit.io/), and [Docker](https://www.docker.com/).
