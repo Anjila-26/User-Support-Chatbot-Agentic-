@@ -88,8 +88,7 @@ Task3/
 ### 1. Clone the Repository
 
 ```bash
-git clone <repo-url>
-cd "Kyra Works/Task3/chatbot"
+git clone 
 ```
 
 ---
@@ -141,7 +140,7 @@ streamlit run streamlit_app.py
 - **POST /api/v1/appointments**  
   Book an appointment.
 
-- **GET /api/v1/appointments**  
+- **GET /api/v1/appointments/{id}**  
   List all appointments.
 
 ---
@@ -192,12 +191,6 @@ streamlit run streamlit_app.py
 
 - `start.sh` / `start.bat`:  
   Cross-platform startup scripts.
-
----
-
-## License
-
-MIT License (add your license here)
 
 ---
 
